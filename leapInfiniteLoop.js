@@ -8,10 +8,16 @@ var ranNumY;
 
 Leap.loop(controllerOptions, function(frame) {
 
-    clear();
-    ranNumX = Math.floor(Math.random() * 2) -1;
-    ranNumY = Math.floor(Math.random() * 2) -1;
-    //console.log(i)
-    circle(x + ranNumX,y + ranNumY,100);
+    //var arr = new Array(frame.hands);
+    // //console.log(frame);
+    if (frame.hands.length === 1){
+        console.log(frame.hands)
+    }
+
+    // clear();
+    // ranNumX = Math.floor(Math.random() * 2) -1;
+    // ranNumY = Math.floor(Math.random() * 2) -1;
+    // //console.log(i)
+    // circle(x + ranNumX,y + ranNumY,100);
     }
 );
