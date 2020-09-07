@@ -1,8 +1,11 @@
 
     var controllerOptions = {};
     //var i = 0;
-    var x = (window.innerWidth)/2;
-    var y = (window.innerHeight)/2;
+    //var x = (window.innerWidth)/2;
+    //var y = (window.innerHeight)/2;
+    var x = 0;
+    var y = 0
+    var z = 0;
     var ranNumX;
     var ranNumY;
     var hand;
@@ -14,6 +17,13 @@
             console.log("Index finger info: " + finger);
 
             console.log(finger.tipPosition[0]);
+
+            x = finger.tipPosition[0];
+            y = finger.tipPosition[1];
+            z = finger.tipPosition[2];
+
+            circle(x, y, 100);
+
         }
     }
 
@@ -35,18 +45,19 @@
 
             HandleHand(hand)
         }
-
-        // ranNumX = Math.floor(Math.random() * 2) -1;
-        // ranNumY = Math.floor(Math.random() * 2) -1;
-        // //console.log(i)
-        // circle(x + ranNumX,y + ranNumY,100);
     }
-
-
 
     Leap.loop(controllerOptions, function(frame) {
         clear();
         HandleFrame(frame);
+
+
+
+        // ranNumX = Math.floor(Math.random() * 2) -1;
+        // ranNumY = Math.floor(Math.random() * 2) -1;
+        // //console.log(i)
+
+
 
         }
     );
