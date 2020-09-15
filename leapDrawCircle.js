@@ -1,13 +1,8 @@
     var controllerOptions = {};
-    var x = 0;
-    var y = 0;
-    var z = 0;
     var rawXMin = 1500;
     var rawXMax = 0;
     var rawYMin = 1500;
     var rawYMax = 0;
-    var outputX = 0;
-    var outputY = 0;
 
     Leap.loop(controllerOptions, function(frame) {
             clear();
@@ -21,53 +16,74 @@
             HandleHand(hand)
         }
     }
+    function HandleHand(hand) {
 
-    function HandleHand(hand){
         var finger = hand.fingers;
-        finger.forEach(function(finger){
-            HandleFinger(finger)
-        });
+        var i;
+
+        for (i = 3; i >=0; i--){
+            var w = 1;
+            //var j = 0;
+            finger.forEach(function(finger){
+                var bone = finger.bones;
+                HandleBone(bone[i], w);
+            });
+        }
     }
 
-    function HandleFinger(finger) {
-        var bone = finger.bones;
-        bone.forEach(function(bone) {
-            //if (finger.type == 1){
-            //console.log(bone);
-            HandleBone(bone);
+    // function HandleHand(hand){
+    //     var finger = hand.fingers;
+    //     finger.forEach(function(finger){
+    //         HandleFinger(finger)
+    //     });
+    // }
 
-            // x = finger.tipPosition[0];
-            // y = window.innerHeight - finger.tipPosition[1]; //finger.tipPosition[1];
-            // z = finger.tipPosition[2];
-            //
-            // if (x < rawXMin) {
-            //     rawXMin = x;
-            // }
-            // if (x > rawXMax) {
-            //     rawXMax = x;
-            // }
-            // if (y < rawYMin) {
-            //     rawYMin = y;
-            // }
-            // if (y > rawYMax) {
-            //     rawYMax = y;
-            // }
-            //
-            // outputX = ((x - rawXMin) / (rawXMax - rawXMin)) * (window.innerWidth - 0);
-            // outputY = ((y - rawYMin) / (rawYMax - rawYMin)) * (window.innerHeight - 0);
-            //
-            // circle(outputX, outputY, 100);
-            //}
-        });
+    // function HandleFinger(finger) {
+    //     var bone = finger.bones;
+    //     var w = 1;
+    //     bone.forEach(function(bone) {
+    //         HandleBone(bone, w);
+    //     });
+    // }
+
+    function HandleBone(bone, w){
+        //coords for tips of each bone
+        xTip = bone.nextJoint[0];
+        yTip = window.innerHeight - bone.nextJoint[1];
+        zTip = bone.nextJoint[2];
+
+        [xTip,yTip] = TransformCoordinates(xTip,yTip)
+
+        //coords for base of each bone
+        xBase = bone.prevJoint[0];
+        yBase = window.innerHeight - bone.prevJoint[1];
+        zBase = bone.prevJoint[2];
+
+        [xBase,yBase] = TransformCoordinates(xBase,yBase)
+
+        if(bone.type === 0){
+            w = 30;
+            stroke('rgb(220,220,220)');
+            strokeWeight(w);
+        }else if(bone.type === 1){
+            w = 20;
+            stroke('rgb(192,192,192)');
+            strokeWeight(w);
+        }else if(bone.type === 2){
+            w = 10;
+            stroke('rgb(105,105,105)');
+            strokeWeight(w);
+        }else if(bone.type === 3){
+            w = 1;
+            stroke('rgb(0,0,0)');
+            strokeWeight(w);
+        }
+
+        line(xTip, yTip, xBase, yBase)
+        //circle(outputX, outputY, 100);
     }
 
-    function HandleBone(bone){
-        x = bone.nextJoint[0];
-        y = window.innerHeight - bone.nextJoint[1];
-        z = bone.nextJoint[2];
-
-        //console.log(x,y,z)
-
+    function TransformCoordinates(x,y){
         if (x < rawXMin) {
             rawXMin = x;
         }
@@ -81,9 +97,8 @@
             rawYMax = y;
         }
 
-        outputX = ((x - rawXMin) / (rawXMax - rawXMin)) * (window.innerWidth - 0);
-        outputY = ((y - rawYMin) / (rawYMax - rawYMin)) * (window.innerHeight - 0);
+        x = ((x - rawXMin) / (rawXMax - rawXMin)) * (window.innerWidth);
+        y = ((y - rawYMin) / (rawYMax - rawYMin)) * (window.innerHeight);
 
-        circle(outputX, outputY, 100);
-
+        return [x,y];
     }
