@@ -17,6 +17,7 @@ Leap.loop(controllerOptions, function(frame) {
 
         clear();
         HandleFrame(frame);
+        RecordData()
 
         previousNumHands = currentNumHands;
     }
@@ -114,4 +115,16 @@ function TransformCoordinates(x,y){
     y = ((y - rawYMin) / (rawYMax - rawYMin)) * (window.innerHeight);
 
     return [x,y];
+}
+
+function RecordData(){
+
+    if (previousNumHands == 2 && currentNumHands == 1){
+        background(51);
+    }
+
+
+
+
+
 }
