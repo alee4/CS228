@@ -1,3 +1,5 @@
+var oneFrameOfData = nj.zeros([5,4,6]);
+
 var controllerOptions = {};
 var rawXMin = 1500;
 var rawXMax = 0;
@@ -6,7 +8,6 @@ var rawYMax = 0;
 
 var previousNumHands = 0;
 var currentNumHands = 0;
-
 
 Leap.loop(controllerOptions, function(frame) {
 
@@ -36,28 +37,43 @@ function HandleHand(hand) {
 
     for (i = 3; i >=0; i--){
         var w = 1;
+
         //var j = 0;
         finger.forEach(function(finger){
             var bone = finger.bones;
-            HandleBone(bone[i], w);
+            var fingerIndex = finger.type;
+            HandleBone(bone[i], w, fingerIndex);
         });
     }
 }
 
-function HandleBone(bone, w){
+function HandleBone(bone, w, fingerIndex){
     //coords for tips of each bone
     xTip = bone.nextJoint[0];
     yTip = window.innerHeight - bone.nextJoint[1];
     zTip = bone.nextJoint[2];
 
-    [xTip,yTip] = TransformCoordinates(xTip,yTip)
+    [xTip,yTip] = TransformCoordinates(xTip,yTip);
 
     //coords for base of each bone
     xBase = bone.prevJoint[0];
     yBase = window.innerHeight - bone.prevJoint[1];
     zBase = bone.prevJoint[2];
 
-    [xBase,yBase] = TransformCoordinates(xBase,yBase)
+    [xBase,yBase] = TransformCoordinates(xBase,yBase);
+
+    var sum = xTip + yTip + zTip + xBase + yBase + zBase;
+
+    //oneFrameOfData.set(fingerIndex, bone.type, sum);
+    oneFrameOfData.set(fingerIndex, bone.type, 0, xBase);
+    oneFrameOfData.set(fingerIndex, bone.type, 1, yBase);
+    oneFrameOfData.set(fingerIndex, bone.type, 2, zBase);
+    oneFrameOfData.set(fingerIndex, bone.type, 3, xTip);
+    oneFrameOfData.set(fingerIndex, bone.type, 4, yTip);
+    oneFrameOfData.set(fingerIndex, bone.type, 5, zTip);
+
+
+
 
     if(bone.type === 0){
         w = 30;
@@ -118,13 +134,8 @@ function TransformCoordinates(x,y){
 }
 
 function RecordData(){
-
     if (previousNumHands == 2 && currentNumHands == 1){
         background(51);
+        console.log(oneFrameOfData.toString())
     }
-
-
-
-
-
 }
