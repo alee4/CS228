@@ -208,7 +208,7 @@ function Test(){
 
             // console.log(currentFeatures);
             // // console.log(currentLabel);
-            // console.log(predictedLabel);
+            console.log(predictedLabel + "---" + parseInt(predictedLabel));
          //}
     // console.log("I am being tested.")
 }
