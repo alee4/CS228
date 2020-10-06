@@ -1,4 +1,8 @@
-var framesOfData = nj.zeros([5,4,6,2]);
+nj.config.printThreshold = 1000;
+var currentSample = 0;
+var numSamples = 2;
+
+var framesOfData = nj.zeros([5,4,6,numSamples]);
 
 var controllerOptions = {};
 var rawXMin = 1500;
@@ -9,8 +13,8 @@ var rawYMax = 0;
 var previousNumHands = 0;
 var currentNumHands = 0;
 
-var numSamples = 2;
-var currentSample = 0;
+
+
 
 Leap.loop(controllerOptions, function(frame) {
 
@@ -22,6 +26,7 @@ Leap.loop(controllerOptions, function(frame) {
         clear();
         HandleFrame(frame);
         RecordData()
+
 
         previousNumHands = currentNumHands;
     }
@@ -77,12 +82,12 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
     // console.log(canvasXNext);
 
 
-    framesOfData.set(fingerIndex, bone.type, 0, xTip, numSamples);
-    framesOfData.set(fingerIndex, bone.type, 1, yTip, numSamples);
-    framesOfData.set(fingerIndex, bone.type, 2, zBase, numSamples);
-    framesOfData.set(fingerIndex, bone.type, 3, xBase, numSamples);
-    framesOfData.set(fingerIndex, bone.type, 4, yBase, numSamples);
-    framesOfData.set(fingerIndex, bone.type, 5, zTip, numSamples);
+    framesOfData.set(fingerIndex, bone.type, 0, currentSample, xTip);
+    framesOfData.set(fingerIndex, bone.type, 1, currentSample, yTip);
+    framesOfData.set(fingerIndex, bone.type, 2, currentSample, zTip);
+    framesOfData.set(fingerIndex, bone.type, 3, currentSample, xBase);
+    framesOfData.set(fingerIndex, bone.type, 4, currentSample, yBase);
+    framesOfData.set(fingerIndex, bone.type, 5, currentSample, zBase);
 
 
     var canvasX1 = window.innerWidth * xTip;
@@ -130,32 +135,22 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
     }
 
     line(canvasX1, canvasY1, canvasX2, canvasY2);
-    //circle(outputX, outputY, 100);
 }
 
-// function TransformCoordinates(x,y){
-//     if (x < rawXMin) {
-//         rawXMin = x;
-//     }
-//     if (x > rawXMax) {
-//         rawXMax = x;
-//     }
-//     if (y < rawYMin) {
-//         rawYMin = y;
-//     }
-//     if (y > rawYMax) {
-//         rawYMax = y;
-//     }
-//
-//     x = ((x - rawXMin) / (rawXMax - rawXMin)) * (window.innerWidth);
-//     y = ((y - rawYMin) / (rawYMax - rawYMin)) * (window.innerHeight);
-//
-//     return [x,y];
-// }
-
 function RecordData(){
-    if (previousNumHands == 2 && currentNumHands == 1){
+    if (previousNumHands === 2 && currentNumHands === 1){
         background(51);
-        console.log(oneFrameOfData.toString())
+
+        // console.log(framesOfData.pick(null,null,null,0).toString());
+        // console.log(framesOfData.pick(null,null,null,1).toString());
+
+        }
+    if (currentNumHands === 2){
+        currentSample++;
+        // console.log(currentSample);
+        if (currentSample === numSamples) {
+            currentSample = 0;
+        }
     }
+    console.log(framesOfData.toString())
 }
