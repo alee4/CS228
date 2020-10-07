@@ -27,15 +27,15 @@ function Train(){
     // console.log(test);
 
     var i;
-    for(i = 0; i < train0.shape[3]; i++){
+    for(i = 0; i < trainX.shape[3]; i++){
         //console.log( train0.pick(null,null,null,i).toString() );
-        var features = train0.pick(null,null,null,i).reshape(1, 120);
-        var features1 = train1.pick(null,null,null,i).reshape(1, 120);
+        var features = trainX.pick(null,null,null,i).reshape(1, 120);
+        var features1 = trainY.pick(null,null,null,i).reshape(1, 120);
         // console.log(features.toString());
 
 
-        knnClassifier.addExample(features.tolist(), 0);
-        knnClassifier.addExample(features1.tolist(), 1);
+        knnClassifier.addExample(features.tolist(), 7);
+        knnClassifier.addExample(features1.tolist(), 8);
     }
     // console.log(train0.shape[3]); //gives 2
 
@@ -62,8 +62,9 @@ function Test(){
     var predictedLabel = knnClassifier.classify(currentTestingSample.tolist(), GotResults);
 
     // console.log(predictedClassLabels.toString())
-    console.log(currentTestingSample + "---" + predictedClassLabels.get(testingSampleIndex));
+    //console.log(currentTestingSample + "---" + predictedClassLabels.get(testingSampleIndex));
     // console.log(predictedLabel)
+    console.log(testingSampleIndex + "---" + predictedClassLabels.get(testingSampleIndex));
 
 }
 
