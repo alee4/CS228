@@ -11,24 +11,18 @@ var accuracy = 0;
 var m = 1;
 var n = 0;
 
-
 // var predictedClassLabels = nj.zeros([numSamples]);
 Leap.loop(controllerOptions, function(frame){
     clear();
-    // console.log(irisData.toString())
-    // console.log(numSamples);
     currentNumHands = frame.hands.length;
-
     if (trainingCompleted === false){
         Train();
         trainingCompleted = true;
     }
-
     HandleFrame(frame);
 });
 
 function Train(){
-
     console.log("Training...");
     var i;
     for(i = 0; i < trainX.shape[3]; i++){
@@ -74,7 +68,6 @@ function Train(){
         knnClassifier.addExample(features1.tolist(), 1);
         knnClassifier.addExample(features1Part2.tolist(), 1);
         knnClassifier.addExample(features1Part3.tolist(), 1);
-
         //knn 2
         knnClassifier.addExample(features2.tolist(), 2);
         knnClassifier.addExample(features2Part2.tolist(), 2);
@@ -99,42 +92,32 @@ function Train(){
         knnClassifier.addExample(features8Part2.tolist(), 8);
         //knn 9
         knnClassifier.addExample(features9.tolist(), 9);
-
-
     }
     console.log("Done training.")
     // console.log(train0.shape[3]); //gives 2
 }
 
 function Test(){
-
     CenterDataX();
     CenterDataY();
     CenterDataZ();
 
     var currentTestingSample = framesOfData.pick(null,null,null,testingSampleIndex).reshape(1, 120);
     var predictedLabel = knnClassifier.classify(currentTestingSample.tolist(), GotResults);
-
     var c = predictedClassLabels.get(testingSampleIndex);
-
     var d = 9;
 
     n++;
-
     m = ((n-1) * m + (c == d))/n;
     //console.log(n + ", " + m + ", " + c);
-
     // console.log(testingSampleIndex + "---" + predictedClassLabels.get(testingSampleIndex));
 }
 
 function HandleFrame(frame) {
-
     if (frame.hands.length === 1 || frame.hands.length === 2){
         var hand = frame.hands[0];
         var InteractionBox = frame.interactionBox;
-
         HandleHand(hand, InteractionBox);
-
         Test();
     }
 }
@@ -142,14 +125,11 @@ function HandleFrame(frame) {
 function HandleHand(hand, InteractionBox) {
     var finger = hand.fingers;
     var i;
-
     for (i = 3; i >=0; i--){
         var w = 1;
-
         finger.forEach(function(finger){
             var bone = finger.bones;
             var fingerIndex = finger.type;
-
             HandleBone(bone[i], w, fingerIndex, InteractionBox);
         });
     }
@@ -184,7 +164,7 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
 
     if(bone.type === 0){
         w = 30;
-        if(currentNumHands == 1){        //if only 1 hand shows up, make the lines green
+        if(currentNumHands == 1){                                 //if only 1 hand shows up, make the lines green
             stroke('rgb(166,166,166)');
         }else if(currentNumHands == 2){                           // else 2 hands, make lines red
             stroke('rgb(166,166,166)');
@@ -215,37 +195,26 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
         }
         strokeWeight(w);
     }
-
     line(canvasX1, canvasY1, canvasX2, canvasY2);
 }
 
-
 function GotResults(err, result){
-
     testingSampleIndex +=1;
-
     if (testingSampleIndex >= trainX.shape[3]){
         testingSampleIndex = 0;
     }
-
     predictedClassLabels.set(testingSampleIndex, parseInt(result.label));
     console.log(predictedClassLabels.get(testingSampleIndex));
 }
 
 function  CenterDataX() {
-
     xValues = framesOfData.slice([],[],[0,6,3]);
-
     var currentMean = xValues.mean();
     var horizontalShift = 0.5 - currentMean;
-
-    // console.log(xValues.shape);
     currentMean = xValues.mean();
-    //console.log(currentMean);
 
     for (var currentRow = 0; currentRow < xValues.shape[0]; currentRow++){
         for(var currentColumn = 0; currentColumn < xValues.shape[1]; currentColumn++){
-
             currentX = framesOfData.get(currentRow,currentColumn,0);
             shiftedX = currentX + horizontalShift;
             framesOfData.set(currentRow,currentColumn,0, shiftedX);
@@ -253,27 +222,19 @@ function  CenterDataX() {
             currentX = framesOfData.get(currentRow,currentColumn,3);
             shiftedX = currentX + horizontalShift;
             framesOfData.set(currentRow,currentColumn,3, shiftedX);
-
         }
     }
     currentMean = xValues.mean();
-    //console.log(currentMean);
 }
 
 function  CenterDataY() {
-
     yValues = framesOfData.slice([],[],[1,6,3]);
-
     var currentMean = yValues.mean();
     var horizontalShift = 0.5 - currentMean;
-
-    // console.log(xValues.shape);
     currentMean = yValues.mean();
-    //console.log(currentMean);
 
     for (var currentRow = 0; currentRow < yValues.shape[0]; currentRow++){
         for(var currentColumn = 0; currentColumn < yValues.shape[1]; currentColumn++){
-
             currentY = framesOfData.get(currentRow,currentColumn,1);
             shiftedY = currentY + horizontalShift;
             framesOfData.set(currentRow,currentColumn,1, shiftedY);
@@ -284,23 +245,16 @@ function  CenterDataY() {
         }
     }
     currentMean = yValues.mean();
-    //console.log(currentMean);
 }
 
 function  CenterDataZ() {
-
     zValues = framesOfData.slice([],[],[2,6,3]);
-
     var currentMean = zValues.mean();
     var horizontalShift = 0.5 - currentMean;
-
-    // console.log(xValues.shape);
     currentMean = zValues.mean();
-    //console.log(currentMean);
 
     for (var currentRow = 0; currentRow < zValues.shape[0]; currentRow++){
         for(var currentColumn = 0; currentColumn < zValues.shape[1]; currentColumn++){
-
             currentZ = framesOfData.get(currentRow,currentColumn,2);
             shiftedZ = currentY + horizontalShift;
             framesOfData.set(currentRow,currentColumn,2, shiftedZ);
@@ -311,5 +265,4 @@ function  CenterDataZ() {
         }
     }
     currentMean = zValues.mean();
-    //console.log(currentMean);
 }
