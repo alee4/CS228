@@ -11,16 +11,28 @@ var accuracy = 0;
 var m = 1;
 var n = 0;
 
-var programState = 0;
+var programState = 0 ;
 
 // var predictedClassLabels = nj.zeros([numSamples]);
 Leap.loop(controllerOptions, function(frame){
     clear();
-    currentNumHands = frame.hands.length;
-    if (trainingCompleted === false){
-        // Train();
-        trainingCompleted = true;
+
+    DetermineState(frame);
+    if (programState==0) {
+        HandleState0(frame);
     }
+    else if (programState==1) {
+        HandleState1(frame);
+
+    }else{
+        HandleState2(frame)
+    }
+
+    // currentNumHands = frame.hands.length;
+    // if (trainingCompleted === false){
+    //     // Train();
+    //     trainingCompleted = true;
+    // }
     HandleFrame(frame);
 });
 
@@ -213,10 +225,6 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
     var canvasX2 = window.innerWidth/2 * xBase;
     var canvasY2 = window.innerHeight/2 * (1 - yBase);
 
-
-    // canvasX2 = canvasX2 - window.innerWidth/2;
-    // canvasY2 = canvasY2 - window.innerHeight/2;
-
     if(bone.type === 0){
         w = 30;
         if(currentNumHands == 1){                                 //if only 1 hand shows up, make the lines green
@@ -320,4 +328,211 @@ function  CenterDataZ() {
         }
     }
     currentMean = zValues.mean();
+}
+
+function DetermineState(frame) {
+
+    currentNumHands = frame.hands.length;
+
+    if (currentNumHands === 0) {  //waiting to see hand
+        programState = 0;
+        console.log("entered program state 0.")
+    }
+    else if(HandIsUncentered()){  //hand is present but not centered
+        programState = 1;
+        console.log("entered program state 1.")
+    }
+    else{    //else its present and centered
+        programState = 2;
+        console.log("entered program state 2.")
+    }
+}
+
+function HandleState0(frame) {
+    TrainKNNIfNotDoneYet();
+    DrawImageToHelpUserPutTheirHandOverTheDevice();
+    //HandleState1();
+}
+
+function TrainKNNIfNotDoneYet () {
+    // if (trainingCompleted === false){
+    //     // Train();
+    //     trainingCompleted = true;
+    // }
+}
+
+function DrawImageToHelpUserPutTheirHandOverTheDevice() {
+    image(img, 0, 0);
+}
+
+function HandleState1(frame){
+    // f = HandleFrame(frame);
+    HandleFrame(frame);
+    // Test()
+    // if (HandIsTooFarToTheLeft()){
+    //     DrawArrowRight();
+    //     //console.log("drawing too far to left.")
+    // }
+    // if(HandIsTooFarToTheRight){
+    //     DrawArrowLeft();
+    // }
+    // if(HandIsTooFarDown){
+    //     DrawArrowUp();
+    // }
+    // if (HandIsTooFarUp){
+    //     DrawArrowDown();
+    // }
+    // if(HandIsTooClose){
+    //     DrawArrowAway();
+    // }
+    // if(HandIsTooFarForward){
+    //     DrawArrowToward();
+    // }
+
+
+}
+
+function HandIsUncentered(){
+    // if(HandIsTooFarToTheLeft || HandIsTooFarToTheRight){
+    //     return true;
+    // }
+    // return false;
+
+    // console.log("Checking centering...");
+
+    //Hand Not Cenetered Cases
+    if (HandIsTooFarToTheLeft()) {
+        DrawArrowRight();
+        return true;
+    }
+    else if (HandIsTooFarToTheRight()) {
+        DrawArrowLeft();
+        return true;
+    }
+    else if (HandIsTooFarUp()) {
+        DrawArrowDown();
+        return true;
+    }
+    else if (HandIsTooFarDown()) {
+        DrawArrowUp();
+        return true;
+    }
+    else if (HandIsTooClose()) {
+        DrawArrowAway();
+        return true;
+    }
+    else if (HandIsTooFarForward()) {
+        DrawArrowToward();
+        return true;
+    }
+
+    //If pass all, return false
+    return false;
+}
+
+function HandIsTooFarToTheLeft(){
+    var xValues = framesOfData.slice([],[],[0,6,3]);
+    var currentMean = xValues.mean();
+
+    //console.log(currentMean);
+    if (currentMean < 0.25){
+        return true;
+    }
+    return false;
+}
+
+function HandIsTooFarToTheRight(){
+    var xValues = framesOfData.slice([],[],[0,6,3]);
+    var currentMean = xValues.mean();
+
+    console.log(currentMean);
+
+    if (currentMean > 0.75){
+        return true;
+    }
+    return false;
+}
+
+function HandIsTooFarUp(){
+    var yValues = framesOfData.slice([],[],[1,6,3]);
+    var currentMean = yValues.mean();
+
+    console.log(currentMean);
+
+    if (currentMean > 0.75){
+        return true;
+    }
+    return false;
+}
+
+function HandIsTooFarDown(){
+    var yValues = framesOfData.slice([],[],[1,6,3]);
+    var currentMean = yValues.mean();
+
+    console.log(currentMean);
+
+    if (currentMean< 0.25){
+        return true;
+    }
+    return false;
+}
+
+function HandIsTooClose(){
+    var zValues = framesOfData.slice([],[],[2,6,3]);
+    var currentMean = zValues.mean();
+
+    console.log(currentMean);
+
+    if (currentMean < 0.25){
+        return true;
+    }
+    return false;
+}
+
+function HandIsTooFarForward(){
+    var zValues = framesOfData.slice([],[],[2,6,3]);
+    var currentMean = zValues.mean();
+
+    console.log(currentMean);
+
+    if (currentMean >  0.75){
+        return true;
+    }
+    return false;
+}
+
+
+function DrawArrowRight(){
+    image(rightHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+function DrawArrowLeft(){
+    image(leftHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+function DrawArrowDown(){
+    image(downHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+function DrawArrowUp(){
+    image(upleftHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+function DrawArrowAway(){
+    image(awayleftHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+function DrawArrowToward(){
+    image(towardleftHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
+}
+
+
+function HandleState2(frame){
+    Test();
+    if (frame.hands.length === 1 || frame.hands.length === 2){
+        var hand = frame.hands[0];
+        var InteractionBox = frame.interactionBox;
+        HandleHand(hand, InteractionBox);
+        // Test();
+    }
 }

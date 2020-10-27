@@ -16,21 +16,15 @@ var currentNumHands = 0;
 Leap.loop(controllerOptions, function(frame) {
 
         currentNumHands = frame.hands.length;
-
-        // console.log(previousNumHands);
-        // console.log(currentNumHands);
-
         clear();
         HandleFrame(frame);
         RecordData()
-
 
         previousNumHands = currentNumHands;
     }
 );
 
 function HandleFrame(frame) {
-
     if (frame.hands.length === 1 || frame.hands.length === 2){
         var hand = frame.hands[0];
         var InteractionBox = frame.interactionBox;
@@ -39,7 +33,6 @@ function HandleFrame(frame) {
     }
 }
 function HandleHand(hand, InteractionBox) {
-
     var finger = hand.fingers;
     var i;
 
