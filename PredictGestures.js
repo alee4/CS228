@@ -526,7 +526,6 @@ function DrawArrowToward(){
     image(towardleftHandImg, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2)
 }
 
-
 function HandleState2(frame){
     Test();
     if (frame.hands.length === 1 || frame.hands.length === 2){
@@ -535,4 +534,10 @@ function HandleState2(frame){
         HandleHand(hand, InteractionBox);
         // Test();
     }
+}
+
+function SignIn(){
+    console.log("SignIn() has been called.");
+    username = document.getElementById('username').value;
+    console.log(username);
 }
