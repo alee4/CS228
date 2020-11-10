@@ -13,6 +13,12 @@ var n = 0;
 
 var programState = 0 ;
 
+var userNumber = 0;
+
+// vars for deliverable 9
+var digitToShow = 1;
+var timeSinceLastDigitChange = new Date();
+
 // var predictedClassLabels = nj.zeros([numSamples]);
 Leap.loop(controllerOptions, function(frame){
     clear();
@@ -534,6 +540,8 @@ function HandleState2(frame){
         HandleHand(hand, InteractionBox);
         // Test();
     }
+    DrawLowerRightPanel();
+    DetermineWhetherToSwitchDigits();
 }
 
 function SignIn(){
@@ -542,9 +550,83 @@ function SignIn(){
     console.log(username);
 
     var list = document.getElementById('users');
-    var item = document.createElement('li');
-    item.innerHTML = String(username);
-    list.appendChild(item);
+
+    var newUser = IsNewUser(username,list);
+    //console.log(newUser);
+
+    if (!newUser){
+        var item = document.createElement('li');
+        var item2 = document.createElement('li');
+        console.log("appending list...");
+        item.innerHTML = String(username);
+        item2.innerHTML = 1;
+        list.appendChild(item);
+        list.appendChild(item2);
+        userNumber++;
+
+        item.id = String(username) + "_name";
+        item2.id =String(username) + "_signins";
+    }else{
+        ID = String(username) + "_signins";
+        listItem = document.getElementById( ID );
+        listItem.innerHTML = parseInt(listItem.innerHTML) + 1
+    }
+
     console.log(list.innerHTML);
+    //console.log(list);
     return false;
+}
+
+function IsNewUser(username,list){
+    var usernameFound = false;
+
+    var users = list.children;
+    //console.log(users.length);
+    for (var i = 0; i < users.length; i++){
+        console.log("enter for loop");
+        //console.log(users[i]);
+        //console.log(users[i].innerHTML);
+        if (username === users[i].innerHTML){
+            console.log("found dupe username");
+            usernameFound = true;
+        }
+    }
+
+    return usernameFound;
+    //console.log(users);
+}
+
+function DrawLowerRightPanel() {
+    if (digitToShow == 1){
+        image(signLanguage1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else{
+        image(signLanguage2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }
+}
+
+function  DetermineWhetherToSwitchDigits() {
+
+
+    if (TimeToSwitchDigits()){
+        SwitchDigits();
+    }
+}
+
+function TimeToSwitchDigits() {
+    var currentTime = new Date();
+    resultOfTimeInMilliseconds = currentTime - timeSinceLastDigitChange;
+    resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000
+
+    if (resultOfTimeInSeconds > 1){
+        return true;
+    }
+}
+
+function SwitchDigits() {
+    if (digitToShow == 1){
+        digitToShow = 2;
+    }else{
+        digitToShow = 1;
+    }
+    timeSinceLastDigitChange = new Date();
 }

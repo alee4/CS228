@@ -18,4 +18,9 @@ function setup() { createCanvas(window.innerWidth,window.innerHeight);
     downHandImg = loadImage('https://i.imgur.com/LaAIIrB.jpg');
     upleftHandImg = loadImage('https://i.imgur.com/iOCuMjC.jpg');
 
+    signLanguage1 = loadImage('https://i.imgur.com/ICzEB3P.png');
+    signLanguage2 = loadImage('https://i.imgur.com/YR0Rvip.png');
+
+
+
 }
