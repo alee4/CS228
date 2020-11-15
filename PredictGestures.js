@@ -16,7 +16,7 @@ var programState = 0 ;
 var userNumber = 0;
 
 // vars for deliverable 9
-var digitToShow = 1;
+var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
 
 // var predictedClassLabels = nj.zeros([numSamples]);
@@ -36,7 +36,7 @@ Leap.loop(controllerOptions, function(frame){
 
     // currentNumHands = frame.hands.length;
     // if (trainingCompleted === false){
-    //     // Train();
+    //     Train();
     //     trainingCompleted = true;
     // }
     HandleFrame(frame);
@@ -47,108 +47,108 @@ function Train(){
     var i;
     for(i = 0; i < trainX.shape[3]; i++){
 
-        // //console.log( train0.pick(null,null,null,i).toString() );
-        // //~~~~~~~~~~~~~~~~~~~~~~Features~~~~~~~~~~~~~~~~~~~~~~~~~
-        // //features 0
-        // var features0 = train0.pick(null,null,null,i).reshape(1, 120);
-        // var features0Part2 = train0Bongard.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 1
-        // var features1 = train1.pick(null,null,null,i).reshape(1, 120);
-        // var features1Part2 = train1Bongard.pick(null,null,null,i).reshape(1, 120);
-        // var features1Part3 = train1Allison.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 2
-        // var features2 = train2.pick(null,null,null,i).reshape(1, 120);
-        // var features2Part2 = train2Bongard.pick(null,null,null,i).reshape(1, 120);
-        // var features2Part3 = train2Jimmo.pick(null,null,null,i).reshape(1, 120);
-        // var features2Part4 = train2Neff.pick(null,null,null,i).reshape(1, 120);
-        //
-        //
-        // //features 3
-        // var features3 = train3.pick(null,null,null,i).reshape(1, 120);
-        // var features3Part2 = train3Bongard.pick(null,null,null,i).reshape(1, 120);
-        // var features3Part3 = train3Jing.pick(null,null,null,i).reshape(1, 120);
-        // var features3Part4 = train3Li.pick(null,null,null,i).reshape(1, 120);
-        // var features3Part5 = train3Riofrio.pick(null,null,null,i).reshape(1, 120);
-        // var features3Part6 = train3AustinLee.pick(null,null,null,i).reshape(1, 120);
-        //
-        // // features 4
-        // var features4 = train4.pick(null,null,null,i).reshape(1, 120);
-        // var features4Part2 = train4Bongard.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 5
-        // var features5 = train5.pick(null,null,null,i).reshape(1, 120);
-        // var features5Part2 = train5Bongard.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 6
-        // var features6 = train6.pick(null,null,null,i).reshape(1, 120);
-        // var features6Part2 = train6Bongard.pick(null,null,null,i).reshape(1, 120);
-        // var features6Part3 = train6AustinLee.pick(null,null,null,i).reshape(1, 120);
-        // var features6Part4 = train6Fekert.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 7 (my data)
-        // var features7 = trainX.pick(null,null,null,i).reshape(1, 120);
-        // var features7Part2 = train7Bongard.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 8 (my data)
-        // var features8 = trainY.pick(null,null,null,i).reshape(1, 120);
-        // var features8Part2 = train8Bongard.pick(null,null,null,i).reshape(1, 120);
-        // var features8Part3 = train8AustinLee.pick(null,null,null,i).reshape(1, 120);
-        // var features8Part4 = train8Goldman.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //features 9
-        // var features9 = train9.pick(null,null,null,i).reshape(1, 120);
-        //
-        // //~~~~~~~~~~~~~~~~~~~~~~~~KNNs~~~~~~~~~~~~~~~~~~~~~~~~~
-        // // knn 0
-        // knnClassifier.addExample(features0.tolist(), 0);
-        // knnClassifier.addExample(features0Part2.tolist(), 0);
-        // //knn 1
-        // knnClassifier.addExample(features1.tolist(), 1);
-        // knnClassifier.addExample(features1Part2.tolist(), 1);
-        // knnClassifier.addExample(features1Part3.tolist(), 1);
-        //
-        // //knn 2
-        // knnClassifier.addExample(features2.tolist(), 2);
-        // knnClassifier.addExample(features2Part2.tolist(), 2);
-        // knnClassifier.addExample(features2Part3.tolist(), 2);
-        // knnClassifier.addExample(features2Part4.tolist(), 2);
-        //
-        // //knn 3
-        // knnClassifier.addExample(features3.tolist(), 3);
-        // knnClassifier.addExample(features3Part2.tolist(), 3);
-        // knnClassifier.addExample(features3Part3.tolist(), 3);
-        // knnClassifier.addExample(features3Part4.tolist(), 3);
-        // // knnClassifier.addExample(features3Part5.tolist(), 3);
-        // knnClassifier.addExample(features3Part6.tolist(), 3);
-        //
-        // //knn 4
-        // knnClassifier.addExample(features4.tolist(), 4);
-        // knnClassifier.addExample(features4Part2.tolist(), 4);
-        //
-        // //knn 5
-        // knnClassifier.addExample(features5.tolist(), 5);
-        // knnClassifier.addExample(features5Part2.tolist(), 5);
-        //
-        // //knn 6
-        // //knnClassifier.addExample(features6.tolist(), 6);
-        // knnClassifier.addExample(features6Part2.tolist(), 6);
-        // // knnClassifier.addExample(features6Part3.tolist(), 6);
-        // knnClassifier.addExample(features6Part4.tolist(), 6);
-        //
-        // //knn 7
-        // knnClassifier.addExample(features7.tolist(), 7);
-        // knnClassifier.addExample(features7Part2.tolist(), 7);
-        //
-        // //knn 8
-        // // knnClassifier.addExample(features8.tolist(), 8);
-        // // knnClassifier.addExample(features8Part2.tolist(), 8);
-        // knnClassifier.addExample(features8Part3.tolist(), 8);
-        // // knnClassifier.addExample(features8Part4.tolist(), 8);
-        //
-        // //knn 9
-        // knnClassifier.addExample(features9.tolist(), 9);
+        //console.log( train0.pick(null,null,null,i).toString() );
+        //~~~~~~~~~~~~~~~~~~~~~~Features~~~~~~~~~~~~~~~~~~~~~~~~~
+        //features 0
+        var features0 = train0.pick(null,null,null,i).reshape(1, 120);
+        var features0Part2 = train0Bongard.pick(null,null,null,i).reshape(1, 120);
+
+        //features 1
+        var features1 = train1.pick(null,null,null,i).reshape(1, 120);
+        var features1Part2 = train1Bongard.pick(null,null,null,i).reshape(1, 120);
+        var features1Part3 = train1Allison.pick(null,null,null,i).reshape(1, 120);
+
+        //features 2
+        var features2 = train2.pick(null,null,null,i).reshape(1, 120);
+        var features2Part2 = train2Bongard.pick(null,null,null,i).reshape(1, 120);
+        var features2Part3 = train2Jimmo.pick(null,null,null,i).reshape(1, 120);
+        var features2Part4 = train2Neff.pick(null,null,null,i).reshape(1, 120);
+
+
+        //features 3
+        var features3 = train3.pick(null,null,null,i).reshape(1, 120);
+        var features3Part2 = train3Bongard.pick(null,null,null,i).reshape(1, 120);
+        var features3Part3 = train3Jing.pick(null,null,null,i).reshape(1, 120);
+        var features3Part4 = train3Li.pick(null,null,null,i).reshape(1, 120);
+        var features3Part5 = train3Riofrio.pick(null,null,null,i).reshape(1, 120);
+        var features3Part6 = train3AustinLee.pick(null,null,null,i).reshape(1, 120);
+
+        // features 4
+        var features4 = train4.pick(null,null,null,i).reshape(1, 120);
+        var features4Part2 = train4Bongard.pick(null,null,null,i).reshape(1, 120);
+
+        //features 5
+        var features5 = train5.pick(null,null,null,i).reshape(1, 120);
+        var features5Part2 = train5Bongard.pick(null,null,null,i).reshape(1, 120);
+
+        //features 6
+        var features6 = train6.pick(null,null,null,i).reshape(1, 120);
+        var features6Part2 = train6Bongard.pick(null,null,null,i).reshape(1, 120);
+        var features6Part3 = train6AustinLee.pick(null,null,null,i).reshape(1, 120);
+        var features6Part4 = train6Fekert.pick(null,null,null,i).reshape(1, 120);
+
+        //features 7 (my data)
+        var features7 = trainX.pick(null,null,null,i).reshape(1, 120);
+        var features7Part2 = train7Bongard.pick(null,null,null,i).reshape(1, 120);
+
+        //features 8 (my data)
+        var features8 = trainY.pick(null,null,null,i).reshape(1, 120);
+        var features8Part2 = train8Bongard.pick(null,null,null,i).reshape(1, 120);
+        var features8Part3 = train8AustinLee.pick(null,null,null,i).reshape(1, 120);
+        var features8Part4 = train8Goldman.pick(null,null,null,i).reshape(1, 120);
+
+        //features 9
+        var features9 = train9.pick(null,null,null,i).reshape(1, 120);
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~KNNs~~~~~~~~~~~~~~~~~~~~~~~~~
+        // knn 0
+        knnClassifier.addExample(features0.tolist(), 0);
+        knnClassifier.addExample(features0Part2.tolist(), 0);
+        //knn 1
+        knnClassifier.addExample(features1.tolist(), 1);
+        knnClassifier.addExample(features1Part2.tolist(), 1);
+        knnClassifier.addExample(features1Part3.tolist(), 1);
+
+        //knn 2
+        knnClassifier.addExample(features2.tolist(), 2);
+        knnClassifier.addExample(features2Part2.tolist(), 2);
+        knnClassifier.addExample(features2Part3.tolist(), 2);
+        knnClassifier.addExample(features2Part4.tolist(), 2);
+
+        //knn 3
+        knnClassifier.addExample(features3.tolist(), 3);
+        knnClassifier.addExample(features3Part2.tolist(), 3);
+        knnClassifier.addExample(features3Part3.tolist(), 3);
+        knnClassifier.addExample(features3Part4.tolist(), 3);
+        // knnClassifier.addExample(features3Part5.tolist(), 3);
+        knnClassifier.addExample(features3Part6.tolist(), 3);
+
+        //knn 4
+        knnClassifier.addExample(features4.tolist(), 4);
+        knnClassifier.addExample(features4Part2.tolist(), 4);
+
+        //knn 5
+        knnClassifier.addExample(features5.tolist(), 5);
+        knnClassifier.addExample(features5Part2.tolist(), 5);
+
+        //knn 6
+        //knnClassifier.addExample(features6.tolist(), 6);
+        knnClassifier.addExample(features6Part2.tolist(), 6);
+        // knnClassifier.addExample(features6Part3.tolist(), 6);
+        knnClassifier.addExample(features6Part4.tolist(), 6);
+
+        //knn 7
+        knnClassifier.addExample(features7.tolist(), 7);
+        knnClassifier.addExample(features7Part2.tolist(), 7);
+
+        //knn 8
+        // knnClassifier.addExample(features8.tolist(), 8);
+        // knnClassifier.addExample(features8Part2.tolist(), 8);
+        knnClassifier.addExample(features8Part3.tolist(), 8);
+        // knnClassifier.addExample(features8Part4.tolist(), 8);
+
+        //knn 9
+        knnClassifier.addExample(features9.tolist(), 9);
     }
     console.log("Done training.")
     // console.log(train0.shape[3]); //gives 2
@@ -159,14 +159,9 @@ function Test(){
     CenterDataY();
     CenterDataZ();
 
-    // var currentTestingSample = framesOfData.pick(null,null,null,testingSampleIndex).reshape(1, 120);
-    // var predictedLabel = knnClassifier.classify(currentTestingSample.tolist(), GotResults);
-    // var c = predictedClassLabels.get(testingSampleIndex);
-    // var d = 9;
-    //
-    // n++;
-    // m = ((n-1) * m + (c == d))/n;
-    //console.log(n + ", " + m + ", " + c);
+    var currentTestingSample = framesOfData.pick(null,null,null,testingSampleIndex).reshape(1, 120);
+    var predictedLabel = knnClassifier.classify(currentTestingSample.tolist(), GotResults);
+
     // console.log(testingSampleIndex + "---" + predictedClassLabels.get(testingSampleIndex));
 }
 
@@ -175,7 +170,7 @@ function HandleFrame(frame) {
         var hand = frame.hands[0];
         var InteractionBox = frame.interactionBox;
         HandleHand(hand, InteractionBox);
-        // Test();
+        Test();
     }
 }
 
@@ -231,39 +226,57 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
     var canvasX2 = window.innerWidth/2 * xBase;
     var canvasY2 = window.innerHeight/2 * (1 - yBase);
 
+    var multiplierGreen = m;
+    var multiplierRed = (m*255);
+    var red = 0;
+    var green = 0;
+    var blue = 0;
     if(bone.type === 0){
         w = 30;
         if(currentNumHands == 1){                                 //if only 1 hand shows up, make the lines green
-            stroke('rgb(166,166,166)');
-        }else if(currentNumHands == 2){                           // else 2 hands, make lines red
-            stroke('rgb(166,166,166)');
+            red = 166 - multiplierRed;
+            green = 166 * multiplierGreen;
+        }else if(currentNumHands == 2){
+            red = 166 - multiplierRed;
+            green = 166 * multiplierGreen;// else 2 hands, make lines red
         }
         strokeWeight(w);
     }else if(bone.type === 1){
         w = 20;
         if(currentNumHands == 1){
-            stroke('rgb(141,141,141)');
+            red = 144 - multiplierRed;
+            green = 144 * multiplierGreen;
         }else if(currentNumHands == 2){
-            stroke('rgb(141,141,141)');
+            red = 144 - multiplierRed;
+            green = 144 * multiplierGreen;
+
+
         }
         strokeWeight(w);
     }else if(bone.type === 2){
         w = 10;
         if(currentNumHands == 1){
-            stroke('rgb(115,115,115)');
+            red = 115 - multiplierRed;
+            green = 115 * multiplierGreen;
+
         }else if(currentNumHands == 2){
-            stroke('rgb(115,115,115)');
+            red = 115 - multiplierRed;
+            green = 115 * multiplierGreen;
         }
         strokeWeight(w);
     }else if(bone.type === 3){   // distal part
         w = 1;
         if(currentNumHands == 1){
-            stroke('rgb(90,90,90)');
+            red = 90 - multiplierRed;
+            green = 90 * multiplierGreen;
         }else if(currentNumHands == 2){
-            stroke('rgb(90,90,90)');
+            red = 90 - multiplierRed;
+            green = 90 * multiplierGreen;
         }
         strokeWeight(w);
     }
+
+    stroke(red, green, blue);
     line(canvasX1, canvasY1, canvasX2, canvasY2);
 }
 
@@ -273,7 +286,13 @@ function GotResults(err, result){
         testingSampleIndex = 0;
     }
     predictedClassLabels.set(testingSampleIndex, parseInt(result.label));
-    console.log(predictedClassLabels.get(testingSampleIndex));
+    // console.log(predictedClassLabels.get(testingSampleIndex));
+    var c = predictedClassLabels.get(testingSampleIndex);
+    var d = digitToShow;
+
+    n++;
+    m = ((n-1) * m + (c == d))/n;
+    console.log(n + ", " + m + ", " + c);
 }
 
 function  CenterDataX() {
@@ -342,15 +361,15 @@ function DetermineState(frame) {
 
     if (currentNumHands === 0) {  //waiting to see hand
         programState = 0;
-        console.log("entered program state 0.")
+        // console.log("entered program state 0.")
     }
     else if(HandIsUncentered()){  //hand is present but not centered
         programState = 1;
-        console.log("entered program state 1.")
+        // console.log("entered program state 1.")
     }
     else{    //else its present and centered
         programState = 2;
-        console.log("entered program state 2.")
+        // console.log("entered program state 2.")
     }
 }
 
@@ -361,10 +380,10 @@ function HandleState0(frame) {
 }
 
 function TrainKNNIfNotDoneYet () {
-    // if (trainingCompleted === false){
-    //     // Train();
-    //     trainingCompleted = true;
-    // }
+    if (trainingCompleted === false){
+        Train();
+        trainingCompleted = true;
+    }
 }
 
 function DrawImageToHelpUserPutTheirHandOverTheDevice() {
@@ -394,7 +413,6 @@ function HandleState1(frame){
     // if(HandIsTooFarForward){
     //     DrawArrowToward();
     // }
-
 
 }
 
@@ -451,7 +469,7 @@ function HandIsTooFarToTheRight(){
     var xValues = framesOfData.slice([],[],[0,6,3]);
     var currentMean = xValues.mean();
 
-    console.log(currentMean);
+    //console.log(currentMean);
 
     if (currentMean > 0.75){
         return true;
@@ -463,7 +481,7 @@ function HandIsTooFarUp(){
     var yValues = framesOfData.slice([],[],[1,6,3]);
     var currentMean = yValues.mean();
 
-    console.log(currentMean);
+    //console.log(currentMean);
 
     if (currentMean > 0.75){
         return true;
@@ -475,7 +493,7 @@ function HandIsTooFarDown(){
     var yValues = framesOfData.slice([],[],[1,6,3]);
     var currentMean = yValues.mean();
 
-    console.log(currentMean);
+    //console.log(currentMean);
 
     if (currentMean< 0.25){
         return true;
@@ -487,7 +505,7 @@ function HandIsTooClose(){
     var zValues = framesOfData.slice([],[],[2,6,3]);
     var currentMean = zValues.mean();
 
-    console.log(currentMean);
+    //console.log(currentMean);
 
     if (currentMean < 0.25){
         return true;
@@ -499,7 +517,7 @@ function HandIsTooFarForward(){
     var zValues = framesOfData.slice([],[],[2,6,3]);
     var currentMean = zValues.mean();
 
-    console.log(currentMean);
+    //console.log(currentMean);
 
     if (currentMean >  0.75){
         return true;
@@ -597,7 +615,7 @@ function IsNewUser(username,list){
 }
 
 function DrawLowerRightPanel() {
-    if (digitToShow == 1){
+    if (digitToShow == 0){
         image(signLanguage1, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else{
         image(signLanguage2, window.innerWidth/2, window.innerHeight/2, 0, 0)
@@ -605,7 +623,6 @@ function DrawLowerRightPanel() {
 }
 
 function  DetermineWhetherToSwitchDigits() {
-
 
     if (TimeToSwitchDigits()){
         SwitchDigits();
@@ -617,16 +634,17 @@ function TimeToSwitchDigits() {
     resultOfTimeInMilliseconds = currentTime - timeSinceLastDigitChange;
     resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000
 
-    if (resultOfTimeInSeconds > 1){
+    if (resultOfTimeInSeconds > 5){
         return true;
     }
 }
 
 function SwitchDigits() {
-    if (digitToShow == 1){
-        digitToShow = 2;
-    }else{
-        digitToShow = 1;
+    if (digitToShow == 0) {
+        digitToShow = 4;
+    } else {
+        digitToShow = 0;
     }
     timeSinceLastDigitChange = new Date();
+    n = 0;
 }
