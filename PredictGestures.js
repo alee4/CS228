@@ -19,6 +19,14 @@ var userNumber = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
 
+//vars for d10
+var arrayOfSigns = [2,3,4,5,6,7,8,9];
+var signsInUse = [0,1];
+var userIsDoingBetterCount = 0;
+var lengthOfSignsInUse = 0;
+var currentThing = 0;
+
+
 // var predictedClassLabels = nj.zeros([numSamples]);
 Leap.loop(controllerOptions, function(frame){
     clear();
@@ -293,6 +301,15 @@ function GotResults(err, result){
     n++;
     m = ((n-1) * m + (c == d))/n;
     console.log(n + ", " + m + ", " + c);
+
+    //if the percent correct is higher than 50%, add one to the user count
+    //user count determines if the user is doing well consistently
+    if(m >= 0.50) {
+        userIsDoingBetterCount = userIsDoingBetterCount + 1;
+    }
+    // }else{ //else it subtracts 1, unsure if i should add this tho
+    //     userIsDoingBetterCount = userIsDoingBetterCount - 1;
+    // }
 }
 
 function  CenterDataX() {
@@ -558,7 +575,9 @@ function HandleState2(frame){
         HandleHand(hand, InteractionBox);
         // Test();
     }
-    DrawLowerRightPanel();
+    //creates hand sign to do in lower right
+    DrawLowerRightPanel();                                      //TODO DRAWING
+    //if its been 5 seconds, switch digits..
     DetermineWhetherToSwitchDigits();
 }
 
@@ -616,14 +635,55 @@ function IsNewUser(username,list){
 
 function DrawLowerRightPanel() {
     if (digitToShow == 0){
-        image(signLanguage1, window.innerWidth/2, window.innerHeight/2, 0, 0)
-    }else{
-        image(signLanguage2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(sign0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 1){
+        image(sign1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 2){
+        image(sign2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 3){
+        image(sign3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 4){
+        image(sign4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 5){
+        image(sign5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 6){
+        image(sign6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 7){
+        image(sign7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 8){
+        image(sign8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 9){
+        image(sign9, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }
 }
 
-function  DetermineWhetherToSwitchDigits() {
+function DrawLowerRightPanelIfUserIsDoingWell() {
+    if (digitToShow == 0){
+        image(number0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 1){
+        image(number1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 2){
+        image(number2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 3){
+        image(number3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 4){
+        image(number4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 5){
+        image(number5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 6){
+        image(number6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 7){
+        image(number7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 8){
+        image(number8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }else if(digitToShow == 9){
+        image(number9, window.innerWidth/2, window.innerHeight/2, 0, 0)
+    }
+}
 
+
+
+function  DetermineWhetherToSwitchDigits() {
     if (TimeToSwitchDigits()){
         SwitchDigits();
     }
@@ -632,7 +692,7 @@ function  DetermineWhetherToSwitchDigits() {
 function TimeToSwitchDigits() {
     var currentTime = new Date();
     resultOfTimeInMilliseconds = currentTime - timeSinceLastDigitChange;
-    resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000
+    resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000;
 
     if (resultOfTimeInSeconds > 5){
         return true;
@@ -640,11 +700,216 @@ function TimeToSwitchDigits() {
 }
 
 function SwitchDigits() {
-    if (digitToShow == 0) {
-        digitToShow = 4;
-    } else {
-        digitToShow = 0;
+    var randomElement;
+
+    //if user is consistently getting a high enough percentage, take value from arrayOfSigns and append it to the
+    //signsInUse array to use for the digits to show
+    if( userIsDoingBetterCount > 50 ){
+
+        //if there is still something in the arrayOfSigns, add the stuff
+        if ( arrayOfSigns.length > 0){
+            //find a random value from the array of signs
+            randomElement = Math.floor(Math.random() * arrayOfSigns.length);
+            //add that value to the signs in use array
+            signsInUse.push(arrayOfSigns[randomElement]);
+            //remove the added value from the array of signs so that you dont use it again
+            arrayOfSigns.splice(randomElement, 1);
+        }
+
+        //reset countt for next time
+        //userIsDoingBetterCount = 0;
     }
+
+    lengthOfSignsInUse = signsInUse.length;
+
+    //depending on the current length of signs in use, set the digit to the next one in the array
+    setDigitToShowToNext(lengthOfSignsInUse, signsInUse);
+
+    //create loop that adds digits to show based on what is in the signsInUse array
+    // if (digitToShow == 0) {
+    //     digitToShow = 4;
+    // } else {
+    //     digitToShow = 0;
+    // }
+
     timeSinceLastDigitChange = new Date();
     n = 0;
+
+    //reset count
+    userIsDoingBetterCount = 0;
+}
+
+function setDigitToShowToNext(l, signsInUse) {
+    //length is 2 at start, so only 0 and 1 is in array, so set digit to show to spot at 0
+
+    if(l == 2){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+        } else {
+            digitToShow = signsInUse[0];
+        }
+     //if the length is 3, swap thru the values
+    }else if(l == 3){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+        }else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    //if length of array is 4, then loop thru all 4
+    else if(l == 4){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    else if(l == 5){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else if(digitToShow == signsInUse[3]){
+            digitToShow = signsInUse[4];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    else if(l == 6){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else if(digitToShow == signsInUse[3]){
+            digitToShow = signsInUse[4];
+        }
+        else if(digitToShow == signsInUse[4]){
+            digitToShow = signsInUse[5];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    else if(l == 7){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else if(digitToShow == signsInUse[3]){
+            digitToShow = signsInUse[4];
+        }
+        else if(digitToShow == signsInUse[4]){
+            digitToShow = signsInUse[5];
+        }
+        else if(digitToShow == signsInUse[5]){
+            digitToShow = signsInUse[6];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    else if(l == 8){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else if(digitToShow == signsInUse[3]){
+            digitToShow = signsInUse[4];
+        }
+        else if(digitToShow == signsInUse[4]){
+            digitToShow = signsInUse[5];
+        }
+        else if(digitToShow == signsInUse[5]){
+            digitToShow = signsInUse[6];
+        }
+        else if(digitToShow == signsInUse[6]){
+            digitToShow = signsInUse[7];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+    else if(l == 8){
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+
+        } else if(digitToShow == signsInUse[1]){
+            digitToShow = signsInUse[2];
+
+        }else if(digitToShow == signsInUse[2]){
+            digitToShow = signsInUse[3];
+        }
+        else if(digitToShow == signsInUse[3]){
+            digitToShow = signsInUse[4];
+        }
+        else if(digitToShow == signsInUse[4]){
+            digitToShow = signsInUse[5];
+        }
+        else if(digitToShow == signsInUse[5]){
+            digitToShow = signsInUse[6];
+        }
+        else if(digitToShow == signsInUse[6]){
+            digitToShow = signsInUse[7];
+        }
+        else if(digitToShow == signsInUse[8]){
+            digitToShow = signsInUse[9];
+        }
+        else {
+            digitToShow = signsInUse[0];
+        }
+    }
+
+    //
+    // if (digitToShow == 0) {
+    //     digitToShow = 1;
+    // } else if (digitToShow == 1) {
+    //     digitToShow = 2;
+    // }else if (digitToShow == 2) {
+    //     digitToShow = 3;
+    // }else if (digitToShow == 3) {
+    //     digitToShow = 4;
+    // }else if (digitToShow == 4) {
+    //     digitToShow = 5;
+    // }else if (digitToShow == 5) {
+    //     digitToShow = 6;
+    // }else if (digitToShow == 6) {
+    //     digitToShow = 7;
+    // }else if (digitToShow == 7) {
+    //     digitToShow = 8;
+    // }else if (digitToShow == 8) {
+    //     digitToShow = 9;
+    // }else if (digitToShow == 9) {
+    //     digitToShow = 0;
+    // }
+
 }
