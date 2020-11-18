@@ -25,6 +25,18 @@ var signsInUse = [0,1];
 var userIsDoingBetterCount = 0;
 var lengthOfSignsInUse = 0;
 var currentThing = 0;
+var timeCount;
+
+var betterCount0 = 0;
+var betterCount1 = 0;
+var betterCount2 = 0;
+var betterCount3 = 0;
+var betterCount4 = 0;
+var betterCount5 = 0;
+var betterCount6 = 0;
+var betterCount7 = 0;
+var betterCount8 = 0;
+var betterCount9 = 0;
 
 
 // var predictedClassLabels = nj.zeros([numSamples]);
@@ -306,10 +318,45 @@ function GotResults(err, result){
     //user count determines if the user is doing well consistently
     if(m >= 0.50) {
         userIsDoingBetterCount = userIsDoingBetterCount + 1;
+        timeCount = timeCount + 1;
+    }else{
+        //timeCount = timeCount - 1;
     }
     // }else{ //else it subtracts 1, unsure if i should add this tho
     //     userIsDoingBetterCount = userIsDoingBetterCount - 1;
     // }
+
+    //adds a betterCount to each number if the user is doing well on those numbers
+    if(m >= 0.50 && c == 0 ){
+        betterCount0 = betterCount0 + 1;
+    }
+    if(m >= 0.40 && c == 1 ){
+        betterCount1 = betterCount1 + 1;
+    }
+    if(m >= 0.40 && c == 2 ){
+        betterCount2 = betterCount2 + 1;
+    }
+    if(m >= 0.40 && c == 3 ){
+        betterCount3 = betterCount3 + 1;
+    }
+    if(m >= 0.50 && c == 4 ){
+        betterCount4 = betterCount4 + 1;
+    }
+    if(m >= 0.50 && c == 5 ){
+        betterCount5 = betterCount5 + 1;
+    }
+    if(m >= 0.50 && c == 6 ){
+        betterCount6 = betterCount6 + 1;
+    }
+    if(m >= 0.50 && c == 7 ){
+        betterCount7 = betterCount7 + 1;
+    }
+    if(m >= 0.50 && c == 8 ){
+        betterCount8 = betterCount8 + 1;
+    }
+    if(m >= 0.50 && c == 9 ){
+        betterCount9 = betterCount9 + 1;
+    }
 }
 
 function  CenterDataX() {
@@ -411,26 +458,6 @@ function HandleState1(frame){
     // f = HandleFrame(frame);
     HandleFrame(frame);
     // Test()
-    // if (HandIsTooFarToTheLeft()){
-    //     DrawArrowRight();
-    //     //console.log("drawing too far to left.")
-    // }
-    // if(HandIsTooFarToTheRight){
-    //     DrawArrowLeft();
-    // }
-    // if(HandIsTooFarDown){
-    //     DrawArrowUp();
-    // }
-    // if (HandIsTooFarUp){
-    //     DrawArrowDown();
-    // }
-    // if(HandIsTooClose){
-    //     DrawArrowAway();
-    // }
-    // if(HandIsTooFarForward){
-    //     DrawArrowToward();
-    // }
-
 }
 
 function HandIsUncentered(){
@@ -575,10 +602,22 @@ function HandleState2(frame){
         HandleHand(hand, InteractionBox);
         // Test();
     }
-    //creates hand sign to do in lower right
-    DrawLowerRightPanel();                                      //TODO DRAWING
+
+    //should still have previous count here
+    //if the user is not doing better, so count is <75, just use normal sign drawing
+    //else, use just the number drawings
+    // if( userIsDoingBetterCount <= 75){
+    //     //creates hand sign to do in lower right
+    DrawLowerRightPanel();
+
+    // }else{
+    //     DrawLowerRightPanelIfUserIsDoingWell();
+    // }
+
     //if its been 5 seconds, switch digits..
     DetermineWhetherToSwitchDigits();
+
+
 }
 
 function SignIn(){
@@ -634,26 +673,78 @@ function IsNewUser(username,list){
 }
 
 function DrawLowerRightPanel() {
+    // var better = false;
+    // if (userIsDoingBetterCount > 75){
+    //     better = true;
+    // }
+
     if (digitToShow == 0){
-        image(sign0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+
+        if (betterCount0 > 75){
+            image(number0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
     }else if(digitToShow == 1){
-        image(sign1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount1 > 75){
+            image(number1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
     }else if(digitToShow == 2){
-        image(sign2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount2 > 75){
+            image(number2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+
     }else if(digitToShow == 3){
-        image(sign3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount3 > 75){
+            image(number3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
     }else if(digitToShow == 4){
-        image(sign4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount4 > 75){
+            image(number4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
     }else if(digitToShow == 5){
-        image(sign5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount5 > 75){
+            image(number5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+        //image(sign5, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 6){
-        image(sign6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount6 > 75){
+            image(number6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+        //image(sign6, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 7){
-        image(sign7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount7 > 75){
+            image(number7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+        //image(sign7, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 8){
-        image(sign8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount8 > 75){
+            image(number8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+        //image(sign8, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 9){
-        image(sign9, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        if (betterCount9 > 75){
+            image(number9, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }else{
+            image(sign9, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        }
+        //image(sign9, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }
 }
 
@@ -681,8 +772,6 @@ function DrawLowerRightPanelIfUserIsDoingWell() {
     }
 }
 
-
-
 function  DetermineWhetherToSwitchDigits() {
     if (TimeToSwitchDigits()){
         SwitchDigits();
@@ -694,7 +783,15 @@ function TimeToSwitchDigits() {
     resultOfTimeInMilliseconds = currentTime - timeSinceLastDigitChange;
     resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000;
 
-    if (resultOfTimeInSeconds > 5){
+    var timeForUser = 5;
+
+    if (timeCount > 75){
+        timeForUser = 2;
+    }else{
+        timeForUser = 5;
+    }
+
+    if (resultOfTimeInSeconds > timeForUser){
         return true;
     }
 }
@@ -737,6 +834,7 @@ function SwitchDigits() {
 
     //reset count
     userIsDoingBetterCount = 0;
+
 }
 
 function setDigitToShowToNext(l, signsInUse) {
