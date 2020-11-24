@@ -24,7 +24,6 @@ var arrayOfSigns = [2,3,4,5,6,7,8,9];
 var signsInUse = [0,1];
 var userIsDoingBetterCount = 0;
 var lengthOfSignsInUse = 0;
-var currentThing = 0;
 var timeCount;
 
 var betterCount0 = 0;
@@ -37,6 +36,10 @@ var betterCount6 = 0;
 var betterCount7 = 0;
 var betterCount8 = 0;
 var betterCount9 = 0;
+
+//interim videos
+var equationToShow = 1;
+
 
 
 // var predictedClassLabels = nj.zeros([numSamples]);
@@ -228,18 +231,6 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
     framesOfData.set(fingerIndex, bone.type, 4, yBase);
     framesOfData.set(fingerIndex, bone.type, 5, zBase);
 
-    // var canvasX1 = window.innerWidth * xTip;
-    // var canvasY1 = window.innerHeight * (1 - yTip);
-    //
-    // var canvasX2 = window.innerWidth * xBase;
-    // var canvasY2 = window.innerHeight * (1 - yBase);
-
-    // var canvasX1 =   xTip;
-    // var canvasY1 =  yTip;
-    //
-    // var canvasX2 = window.innerWidth/2 - xBase;
-    // var canvasY2 = window.innerHeight/2 - yBase;
-
     var canvasX1 = window.innerWidth/2 * xTip;
     var canvasY1 = window.innerHeight/2 * (1 - yTip);
 
@@ -258,7 +249,7 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
             green = 166 * multiplierGreen;
         }else if(currentNumHands == 2){
             red = 166 - multiplierRed;
-            green = 166 * multiplierGreen;// else 2 hands, make lines red
+            green = 166 * multiplierGreen;                        // else 2 hands, make lines red
         }
         strokeWeight(w);
     }else if(bone.type === 1){
@@ -269,8 +260,6 @@ function HandleBone(bone, w, fingerIndex, InteractionBox){
         }else if(currentNumHands == 2){
             red = 144 - multiplierRed;
             green = 144 * multiplierGreen;
-
-
         }
         strokeWeight(w);
     }else if(bone.type === 2){
@@ -317,46 +306,43 @@ function GotResults(err, result){
     //if the percent correct is higher than 50%, add one to the user count
     //user count determines if the user is doing well consistently
     if(m >= 0.50) {
-        userIsDoingBetterCount = userIsDoingBetterCount + 1;
+        userIsDoingBetterCount = userIsDoingBetterCount + 10;
         timeCount = timeCount + 1;
     }else{
         //timeCount = timeCount - 1;
     }
-    // }else{ //else it subtracts 1, unsure if i should add this tho
-    //     userIsDoingBetterCount = userIsDoingBetterCount - 1;
-    // }
 
     //adds a betterCount to each number if the user is doing well on those numbers
-    if(m >= 0.50 && c == 0 ){
-        betterCount0 = betterCount0 + 1;
-    }
-    if(m >= 0.40 && c == 1 ){
-        betterCount1 = betterCount1 + 1;
-    }
-    if(m >= 0.40 && c == 2 ){
-        betterCount2 = betterCount2 + 1;
-    }
-    if(m >= 0.40 && c == 3 ){
-        betterCount3 = betterCount3 + 1;
-    }
-    if(m >= 0.50 && c == 4 ){
-        betterCount4 = betterCount4 + 1;
-    }
-    if(m >= 0.50 && c == 5 ){
-        betterCount5 = betterCount5 + 1;
-    }
-    if(m >= 0.50 && c == 6 ){
-        betterCount6 = betterCount6 + 1;
-    }
-    if(m >= 0.50 && c == 7 ){
-        betterCount7 = betterCount7 + 1;
-    }
-    if(m >= 0.50 && c == 8 ){
-        betterCount8 = betterCount8 + 1;
-    }
-    if(m >= 0.50 && c == 9 ){
-        betterCount9 = betterCount9 + 1;
-    }
+    // if(m >= 0.50 && c == 0 ){
+    //     betterCount0 = betterCount0 + 1;
+    // }
+    // if(m >= 0.40 && c == 1 ){
+    //     betterCount1 = betterCount1 + 1;
+    // }
+    // if(m >= 0.40 && c == 2 ){
+    //     betterCount2 = betterCount2 + 1;
+    // }
+    // if(m >= 0.40 && c == 3 ){
+    //     betterCount3 = betterCount3 + 1;
+    // }
+    // if(m >= 0.50 && c == 4 ){
+    //     betterCount4 = betterCount4 + 1;
+    // }
+    // if(m >= 0.50 && c == 5 ){
+    //     betterCount5 = betterCount5 + 1;
+    // }
+    // if(m >= 0.50 && c == 6 ){
+    //     betterCount6 = betterCount6 + 1;
+    // }
+    // if(m >= 0.50 && c == 7 ){
+    //     betterCount7 = betterCount7 + 1;
+    // }
+    // if(m >= 0.50 && c == 8 ){
+    //     betterCount8 = betterCount8 + 1;
+    // }
+    // if(m >= 0.50 && c == 9 ){
+    //     betterCount9 = betterCount9 + 1;
+    // }
 }
 
 function  CenterDataX() {
@@ -461,13 +447,6 @@ function HandleState1(frame){
 }
 
 function HandIsUncentered(){
-    // if(HandIsTooFarToTheLeft || HandIsTooFarToTheRight){
-    //     return true;
-    // }
-    // return false;
-
-    // console.log("Checking centering...");
-
     //Hand Not Cenetered Cases
     if (HandIsTooFarToTheLeft()) {
         DrawArrowRight();
@@ -603,20 +582,13 @@ function HandleState2(frame){
         // Test();
     }
 
-    //should still have previous count here
-    //if the user is not doing better, so count is <75, just use normal sign drawing
-    //else, use just the number drawings
-    // if( userIsDoingBetterCount <= 75){
-    //     //creates hand sign to do in lower right
-    DrawLowerRightPanel();
+        //should still have previous count here
+        //if the user is not doing better, so count is <75, just use normal sign drawing
+        //else, use just the number drawings
+        DrawLowerRightPanel();
 
-    // }else{
-    //     DrawLowerRightPanelIfUserIsDoingWell();
-    // }
-
-    //if its been 5 seconds, switch digits..
-    DetermineWhetherToSwitchDigits();
-
+        //if its been 5 seconds, switch digits..
+        DetermineWhetherToSwitchDigits();
 
 }
 
@@ -677,15 +649,32 @@ function DrawLowerRightPanel() {
     // if (userIsDoingBetterCount > 75){
     //     better = true;
     // }
+    // if (lengthOfSignsInUse >= 10){
+    //     DrawDigitToShow();
+    // }else{
+    //     DrawEquations();
+    // }
 
+    if (lengthOfSignsInUse < 10){
+        DrawDigitToShow();
+        console.log("current length of digits to show: " + lengthOfSignsInUse)
+    }else{
+        console.log("----------------------------------------------tryna draw equations...");
+        DrawEquations();
+        console.log("drew ewuations poggers")
+
+    }
+}
+
+function DrawDigitToShow() {
+    //draws the asl sign of the numbers, if you are doing well, then switch to just the number.
     if (digitToShow == 0){
-
         if (betterCount0 > 75){
             image(number0, window.innerWidth/2, window.innerHeight/2, 0, 0)
         }else{
             image(sign0, window.innerWidth/2, window.innerHeight/2, 0, 0)
         }
-    }else if(digitToShow == 1){
+    }else if(digitToShow === 1){
         if (betterCount1 > 75){
             image(number1, window.innerWidth/2, window.innerHeight/2, 0, 0)
         }else{
@@ -748,27 +737,28 @@ function DrawLowerRightPanel() {
     }
 }
 
-function DrawLowerRightPanelIfUserIsDoingWell() {
+function DrawEquations() {
+    //draws the equations
     if (digitToShow == 0){
-        image(number0, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation0, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 1){
-        image(number1, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation1, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 2){
-        image(number2, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation2, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 3){
-        image(number3, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation3, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 4){
-        image(number4, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation4, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 5){
-        image(number5, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation5, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 6){
-        image(number6, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation6, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 7){
-        image(number7, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation7, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 8){
-        image(number8, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation8, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }else if(digitToShow == 9){
-        image(number9, window.innerWidth/2, window.innerHeight/2, 0, 0)
+        image(equation9, window.innerWidth/2, window.innerHeight/2, 0, 0)
     }
 }
 
@@ -783,13 +773,13 @@ function TimeToSwitchDigits() {
     resultOfTimeInMilliseconds = currentTime - timeSinceLastDigitChange;
     resultOfTimeInSeconds = resultOfTimeInMilliseconds / 1000;
 
-    var timeForUser = 5;
+    var timeForUser = 2;
 
-    if (timeCount > 75){
-        timeForUser = 2;
-    }else{
-        timeForUser = 5;
-    }
+    // if (timeCount > 75){
+    //     timeForUser = 2;
+    // }else{
+    //     timeForUser = 5;
+    // }
 
     if (resultOfTimeInSeconds > timeForUser){
         return true;
@@ -804,13 +794,15 @@ function SwitchDigits() {
     if( userIsDoingBetterCount > 50 ){
 
         //if there is still something in the arrayOfSigns, add the stuff
-        if ( arrayOfSigns.length > 0){
+        if ( signsInUse.length < 10){
             //find a random value from the array of signs
             randomElement = Math.floor(Math.random() * arrayOfSigns.length);
             //add that value to the signs in use array
             signsInUse.push(arrayOfSigns[randomElement]);
             //remove the added value from the array of signs so that you dont use it again
             arrayOfSigns.splice(randomElement, 1);
+
+            console.log("successfully added value to array")
         }
 
         //reset countt for next time
@@ -957,10 +949,9 @@ function setDigitToShowToNext(l, signsInUse) {
             digitToShow = signsInUse[0];
         }
     }
-    else if(l == 8){
+    else if(l == 9){
         if (digitToShow == signsInUse[0]) {
             digitToShow = signsInUse[1];
-
         } else if(digitToShow == signsInUse[1]){
             digitToShow = signsInUse[2];
 
@@ -979,35 +970,40 @@ function setDigitToShowToNext(l, signsInUse) {
         else if(digitToShow == signsInUse[6]){
             digitToShow = signsInUse[7];
         }
-        else if(digitToShow == signsInUse[8]){
-            digitToShow = signsInUse[9];
+        else if(digitToShow == signsInUse[7]) {
+            digitToShow = signsInUse[8];
         }
         else {
             digitToShow = signsInUse[0];
         }
     }
+    else if(l == 10) {
+        if (digitToShow == signsInUse[0]) {
+            digitToShow = signsInUse[1];
+        } else if (digitToShow == signsInUse[1]) {
+            digitToShow = signsInUse[2];
+        } else if (digitToShow == signsInUse[2]) {
+            digitToShow = signsInUse[3];
+        } else if (digitToShow == signsInUse[3]) {
+            digitToShow = signsInUse[4];
+        } else if (digitToShow == signsInUse[4]) {
+            digitToShow = signsInUse[5];
+        } else if (digitToShow == signsInUse[5]) {
+            digitToShow = signsInUse[6];
+        } else if (digitToShow == signsInUse[6]) {
+            digitToShow = signsInUse[7];
+        } else if (digitToShow == signsInUse[7]) {
+            digitToShow = signsInUse[8];
+        }  else if (digitToShow == signsInUse[8]) {
+            digitToShow = signsInUse[9];
+        } else {
+            digitToShow = signsInUse[0];
+        }
 
-    //
-    // if (digitToShow == 0) {
-    //     digitToShow = 1;
-    // } else if (digitToShow == 1) {
-    //     digitToShow = 2;
-    // }else if (digitToShow == 2) {
-    //     digitToShow = 3;
-    // }else if (digitToShow == 3) {
-    //     digitToShow = 4;
-    // }else if (digitToShow == 4) {
-    //     digitToShow = 5;
-    // }else if (digitToShow == 5) {
-    //     digitToShow = 6;
-    // }else if (digitToShow == 6) {
-    //     digitToShow = 7;
-    // }else if (digitToShow == 7) {
-    //     digitToShow = 8;
-    // }else if (digitToShow == 8) {
-    //     digitToShow = 9;
-    // }else if (digitToShow == 9) {
-    //     digitToShow = 0;
-    // }
+
+    }
+
+
+
 
 }

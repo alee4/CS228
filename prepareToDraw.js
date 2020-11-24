@@ -33,7 +33,7 @@ function setup() { createCanvas(window.innerWidth,window.innerHeight);
     sign8 =loadImage('https://i.imgur.com/FuB5hXq.png');
     sign9 =loadImage('https://i.imgur.com/cNAU6Gq.png');
 
-
+    //regular number values
     number0 =loadImage('https://i.imgur.com/vzpl2EK.png');
     number1 =loadImage('https://i.imgur.com/tGYTaTT.png');
     number2 =loadImage('https://i.imgur.com/qCUhTkw.png');
@@ -46,4 +46,15 @@ function setup() { createCanvas(window.innerWidth,window.innerHeight);
     number9 =loadImage('https://i.imgur.com/IxK5aWm.png');
 
 
+    //equation images (answers are in the name thing)
+    equation0 = loadImage('https://i.imgur.com/jB67X5M.png');
+    equation1 = loadImage('https://i.imgur.com/xGbsERM.png');
+    equation2 = loadImage('https://i.imgur.com/1Rw2LJH.png');
+    equation3 = loadImage('https://i.imgur.com/d4LUeRb.png');
+    equation4 = loadImage('https://i.imgur.com/N3NzFE5.png');
+    equation5 = loadImage('https://i.imgur.com/AfM3N3e.png');
+    equation6 = loadImage('https://i.imgur.com/ibwTwI3.png');
+    equation7 = loadImage('https://i.imgur.com/D08NUO3.png');
+    equation8 = loadImage('https://i.imgur.com/2X417l8.png');
+    equation9 = loadImage('https://i.imgur.com/NRZiF2U.png');
 }
