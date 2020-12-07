@@ -58,6 +58,7 @@ var mean9 = 0;
 var meanOfEverything = 0;
 
 var currentM = 0;
+
 //--------interim vid 3
 var sortedMeanAt0 = 0;
 var sortedMeanAt1 = 0;
@@ -599,6 +600,7 @@ function HandleState2(frame){
         //if the user is not doing better, so count is <75, just use normal sign drawing
         //else, use just the number drawings
         DrawLowerRightPanel();
+        DrawLowerLeftPanel();
 
         //if its been 5 seconds, switch digits..
         DetermineWhetherToSwitchDigits();
@@ -607,7 +609,7 @@ function HandleState2(frame){
 function SignIn(){
     console.log("SignIn() has been called.");
 
-    // if (lengthOfSignsInUse == 10){
+    // if (lengthOfSignsInUse === 4){
     //     outputHTMLTextBasedOnUserData();
     // }
     outputHTMLTextBasedOnUserData();
@@ -692,6 +694,22 @@ function DrawLowerRightPanel() {
         console.log("drew ewuations poggers")
     }
 }
+
+function DrawLowerLeftPanel() {
+    //create growing rectangle based on best average means
+    console.log("Draw Lower Left Panel Has been called");
+
+    //calculate all the means
+    meanOfEverything = (mean0 + mean1 + mean2 + mean3 + mean4 + mean5 + mean6 + mean7 + mean8 + mean9) / 10;
+
+    console.log("mean of everything: " + meanOfEverything);
+
+
+    stroke("blue");
+    rect(0, window.innerHeight, meanOfEverything * 1000, 100)
+
+}
+
 
 function DrawDigitToShow() {
     //draws the asl sign of the numbers, if you are doing well, then switch to just the number.
@@ -846,7 +864,6 @@ function SwitchDigits() {
 
 function setDigitToShowToNext(l, signsInUse) {
     //length is 2 at start, so only 0 and 1 is in array, so set digit to show to spot at 0
-
     if(l == 2){
         if (digitToShow == signsInUse[0]) {
 
@@ -1246,11 +1263,9 @@ function setDigitToShowToNext(l, signsInUse) {
 
 function aNewUserHasAppeared() {
     //reset global variables if a new user signs in
-
     console.log(usersAndData);
 
     console.log(signsInUse);
-
 
     arrayOfSigns = [2,3,4,5,6,7,8,9];
     signsInUse = [0,1];
@@ -1277,10 +1292,6 @@ function aNewUserHasAppeared() {
 
 function outputHTMLTextBasedOnUserData() {
 
-    // creates string of html for current user name
-    var userNameInHTML = '<li>' + currentUser + '</li>';
-
-
     var aslSignAt0 = signsInUse[0];   //will give the current integer at in this point, first 2 will br 0 and 1
     var aslSignAt1 = signsInUse[1];
     var aslSignAt2 = signsInUse[2];
@@ -1291,7 +1302,6 @@ function outputHTMLTextBasedOnUserData() {
     var aslSignAt7 = signsInUse[7];
     var aslSignAt8 = signsInUse[8];
     var aslSignAt9 = signsInUse[9];
-
 
     // matches each sign with its mean
     var dataObjects = [
@@ -1310,13 +1320,11 @@ function outputHTMLTextBasedOnUserData() {
     //sorts the objects so they go 0,1,2,3,4 etc instead of random (ei 0,1,6,3,2,8..)
     var sortedData = dataObjects.sort(customCompare);
 
-
     //how to get object data at each data point
     console.log("aslSign[0]: " + sortedData[0].aslSign + " mean: " + sortedData[0].mean);
 
     console.log("sorted data: ");
     console.log(sortedData);
-
 
     sortedMeanAt0 = sortedData[0].mean;
     sortedMeanAt1 = sortedData[1].mean;
@@ -1329,50 +1337,39 @@ function outputHTMLTextBasedOnUserData() {
     sortedMeanAt8 = sortedData[8].mean;
     sortedMeanAt9 = sortedData[9].mean;
 
+    // console.log("Individual Sorted Data---------");
+    // console.log(sortedMeanAt0 + " " + sortedMeanAt1 + " " + sortedMeanAt2 + " "+
+    //     sortedMeanAt3 + " " + sortedMeanAt4  + " " +  sortedMeanAt5  + " " +  sortedMeanAt6 + " " +
+    //     sortedMeanAt7 + " " +  sortedMeanAt8 + " " + sortedMeanAt9);
 
     //setup cookies
     WriteScoreToFile();
-
-    // var dataAtIndex0 = '<ul>' +
-    //     '<li id=\"data\">Sign:' + aslSignAt0 + ', Best mean (m): ' + mean0 + '</li>';
-    // var dataAtIndex1 = '<li>Sign:' + aslSignAt1 + ', Best mean (m): ' + mean1 + '</li>';
-    // var dataAtIndex2 = '<li>Sign:' + aslSignAt2 + ', Best mean (m): ' + mean2 + '</li>';
-    // var dataAtIndex3 = '<li>Sign:' + aslSignAt3 + ', Best mean (m): ' + mean3 + '</li>';
-    // var dataAtIndex4 = '<li>Sign:' + aslSignAt4 + ', Best mean (m): ' + mean4 + '</li>';
-    // var dataAtIndex5 = '<li>Sign:' + aslSignAt5 + ', Best mean (m): ' + mean5 + '</li>';
-    // var dataAtIndex6 = '<li>Sign:' + aslSignAt6 + ', Best mean (m): ' + mean6 + '</li>';
-    // var dataAtIndex7 = '<li>Sign:' + aslSignAt7 + ', Best mean (m): ' + mean7 + '</li>';
-    // var dataAtIndex8 = '<li>Sign:' + aslSignAt8 + ', Best mean (m): ' + mean8 + '</li>';
-    // var dataAtIndex9 = '<li>Sign:' + aslSignAt9 + ', Best mean (m): ' + mean9 + '</li>' +
-    //     '</ul>';
-    //
-    //
-    // var fullHTML = userNameInHTML + dataAtIndex0 + dataAtIndex1 + dataAtIndex2 + dataAtIndex3 + dataAtIndex4
-    //     + dataAtIndex5 + dataAtIndex6 + dataAtIndex7 + dataAtIndex8 + dataAtIndex9;
-    //
-    // console.log("-----------------------------------");
-    //
-    // console.log("html is: ");
-    // console.log(fullHTML);
-    //
-    //
-    // console.log("Data printed successfully!");
 }
 
 function WriteScoreToFile() {
 
     //Make a cookie
-    document.cookie = "username" + "=" + escape(currentUser) + "; path=/"; //+ expires
-    document.cookie = "Mean0" + "=" + escape(sortedMeanAt0) + "; path=/"; //+ expires
-    document.cookie = "Mean1" + "=" + escape(sortedMeanAt1) + "; path=/"; //+ expires
-    document.cookie = "Mean2" + "=" + escape(sortedMeanAt2) + "; path=/"; //+ expires
-    document.cookie = "Mean3" + "=" + escape(sortedMeanAt3) + "; path=/"; //+ expires
-    document.cookie = "Mean4" + "=" + escape(sortedMeanAt4) + "; path=/"; //+ expires
-    document.cookie = "Mean5" + "=" + escape(sortedMeanAt5) + "; path=/"; //+ expires
-    document.cookie = "Mean6" + "=" + escape(sortedMeanAt6) + "; path=/"; //+ expires
-    document.cookie = "Mean7" + "=" + escape(sortedMeanAt7) + "; path=/"; //+ expires
-    document.cookie = "Mean8" + "=" + escape(sortedMeanAt8) + "; path=/"; //+ expires
-    document.cookie = "Mean9" + "=" + escape(sortedMeanAt9) + "; path=/"; //+ expires
+    document.cookie = "username" + "=" + escape(currentUser) + "; path=/";
+    document.cookie = "Mean0" + "=" + escape(sortedMeanAt0) + "; path=/";
+    document.cookie = "Mean1" + "=" + escape(sortedMeanAt1) + "; path=/";
+    document.cookie = "Mean2" + "=" + escape(sortedMeanAt2) + "; path=/";
+    document.cookie = "Mean3" + "=" + escape(sortedMeanAt3) + "; path=/";
+    document.cookie = "Mean4" + "=" + escape(sortedMeanAt4) + "; path=/";
+    document.cookie = "Mean5" + "=" + escape(sortedMeanAt5) + "; path=/";
+    document.cookie = "Mean6" + "=" + escape(sortedMeanAt6) + "; path=/";
+    document.cookie = "Mean7" + "=" + escape(sortedMeanAt7) + "; path=/";
+    document.cookie = "Mean8" + "=" + escape(sortedMeanAt8) + "; path=/";
+    document.cookie = "Mean9" + "=" + escape(sortedMeanAt9) + "; path=/";
+
+    // document.cookie = "username" + "=" + escape(currentUser) + "; Mean0" + "=" + escape(sortedMeanAt0) +
+    //     "; Mean1" + "=" + escape(sortedMeanAt1) + "; Mean2" + "=" + escape(sortedMeanAt2) +  "; Mean3" +
+    //     "=" + escape(sortedMeanAt3) + "; Mean4" + "=" + escape(sortedMeanAt4) + "; Mean5" + "="
+    //     + escape(sortedMeanAt5) + "; Mean6" + "=" + escape(sortedMeanAt6) + "; Mean7" + "=" +
+    //     escape(sortedMeanAt7) + "; Mean8" + "=" + escape(sortedMeanAt8) + "; Mean9" + "="
+    //     + escape(sortedMeanAt9) + "; path=/";
+
+
+
         //console.log("Cookie:", document.cookie);
 }
 
@@ -1380,10 +1377,10 @@ function WriteScoreToFile() {
 function  customCompare(a, b) {
     if (a.aslSign > b.aslSign) return 1;
     if (b.aslSign > a.aslSign) return -1;
-
     return 0;
 }
 
+//function to return all the cookies, prob derivative but not gonna fix cause dont have time lol
 function showCookies() {
     return document.cookie
 }
